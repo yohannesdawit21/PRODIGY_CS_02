@@ -4,28 +4,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pixel Manipulation Image Encryption Tool</title>
+    <title>Image Encryption Studio</title>
     <link rel="stylesheet" href="{% static 'webapp/style.css' %}">
 </head>
 <body>
     <div class="page-shell">
         <header class="hero">
-            <div>
-                <p class="eyebrow">Django Edition</p>
-                <h1>Pixel Manipulation Image Encryption Tool</h1>
-                <p class="hero-text">
-                    Upload an image, choose a reversible encryption method, and process it directly in your browser.
-                </p>
-            </div>
-            <div class="hero-badge">Reversible Pixel Security Demo</div>
+            <p class="eyebrow">Django image tool</p>
+            <h1>Encrypt or decrypt an image in one clean workflow.</h1>
+            <p class="hero-text">
+                Upload a JPG or PNG, choose the reversible method you want, and get an instant preview with a lossless PNG download.
+            </p>
         </header>
 
         <main class="layout">
             <section class="panel form-panel">
-                <h2>Process Image</h2>
-                <p class="panel-text">
-                    Use the same numeric key and method again when you want to decrypt an encrypted image.
-                </p>
+                <div class="section-heading">
+                    <p class="section-label">Process</p>
+                    <h2>Image Encryption Studio</h2>
+                    <p class="section-text">
+                        Use the same method and numeric key again later if you want to reverse the result.
+                    </p>
+                </div>
 
                 <form method="post" enctype="multipart/form-data" class="tool-form">
                     {% csrf_token %}
@@ -39,7 +39,7 @@
                     <div class="field-group">
                         <label for="{{ form.image.id_for_label }}">{{ form.image.label }}</label>
                         {{ form.image }}
-                        <small>{{ form.image.help_text }}</small>
+                        <p class="field-hint">{{ form.image.help_text }}</p>
                         {% for error in form.image.errors %}
                             <p class="field-error">{{ error }}</p>
                         {% endfor %}
@@ -48,7 +48,7 @@
                     <div class="field-group">
                         <label for="{{ form.key.id_for_label }}">{{ form.key.label }}</label>
                         {{ form.key }}
-                        <small>{{ form.key.help_text }}</small>
+                        <p class="field-hint">{{ form.key.help_text }}</p>
                         {% for error in form.key.errors %}
                             <p class="field-error">{{ error }}</p>
                         {% endfor %}
@@ -59,77 +59,91 @@
                             <label for="{{ form.method.id_for_label }}">{{ form.method.label }}</label>
                             {{ form.method }}
                         </div>
-
                         <div class="field-group">
                             <label for="{{ form.action.id_for_label }}">{{ form.action.label }}</label>
                             {{ form.action }}
                         </div>
                     </div>
 
-                    <button type="submit" class="primary-button">Run Processing</button>
+                    <button type="submit" class="primary-button">Process image</button>
                 </form>
 
-                <div class="tips-box">
-                    <h3>Quick Notes</h3>
-                    <ul>
-                        <li>`swap` shuffles pixel positions using the key as a deterministic seed.</li>
-                        <li>`math` changes every channel with modular arithmetic.</li>
-                        <li>PNG output is used for downloads so the processed result is preserved exactly.</li>
+                <div class="info-card">
+                    <h3>How it works</h3>
+                    <ul class="info-list">
+                        <li><strong>Swap:</strong> reorders pixels with a key-based shuffle.</li>
+                        <li><strong>Math:</strong> shifts pixel values using reversible modular arithmetic.</li>
+                        <li><strong>Output:</strong> downloads as PNG to preserve the processed result exactly.</li>
                     </ul>
                 </div>
             </section>
 
-            <section class="panel preview-panel">
-                <h2>Results</h2>
+            <section class="panel result-panel">
+                <div class="section-heading">
+                    <p class="section-label">Result</p>
+                    <h2>Preview and download</h2>
+                    <p class="section-text">Your processed image appears here after submission.</p>
+                </div>
 
                 {% if result %}
-                    <div class="result-summary">
-                        <div class="summary-card">
-                            <span class="summary-label">Action</span>
-                            <strong>{{ result.action_label }}</strong>
+                    <div class="result-banner">
+                        <div>
+                            <span class="status-pill">{{ result.action_label }}</span>
+                            <h3>{{ result.action_label }} image ready</h3>
+                            <p class="result-text">
+                                Processed with {{ result.method_label|lower }} using key {{ result.key }}.
+                            </p>
                         </div>
-                        <div class="summary-card">
-                            <span class="summary-label">Method</span>
-                            <strong>{{ result.method }}</strong>
-                        </div>
-                        <div class="summary-card">
-                            <span class="summary-label">Key</span>
-                            <strong>{{ result.key }}</strong>
-                        </div>
-                        <div class="summary-card">
-                            <span class="summary-label">Image Size</span>
-                            <strong>{{ result.image_size }}</strong>
-                        </div>
+                        <a
+                            class="download-button"
+                            href="{{ result.processed_download }}"
+                            download="{{ result.download_name }}"
+                        >
+                            Download PNG
+                        </a>
                     </div>
 
-                    <div class="meta-box">
-                        <p><strong>Uploaded file:</strong> {{ result.input_name }}</p>
-                        <p><strong>Image mode:</strong> {{ result.image_mode }}</p>
+                    <div class="result-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">Uploaded file</span>
+                            <strong>{{ result.input_name }}</strong>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Method</span>
+                            <strong>{{ result.method_label }}</strong>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Image size</span>
+                            <strong>{{ result.image_size }}</strong>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Image mode</span>
+                            <strong>{{ result.image_mode }}</strong>
+                        </div>
                     </div>
 
                     <div class="preview-grid">
                         <article class="preview-card">
-                            <h3>Original Image</h3>
+                            <div class="preview-copy">
+                                <p class="preview-label">Before</p>
+                                <h3>Original image</h3>
+                            </div>
                             <img src="{{ result.original_preview }}" alt="Original uploaded image">
                         </article>
 
                         <article class="preview-card">
-                            <h3>Processed Image</h3>
+                            <div class="preview-copy">
+                                <p class="preview-label">After</p>
+                                <h3>{{ result.action_label }} preview</h3>
+                            </div>
                             <img src="{{ result.processed_preview }}" alt="Processed image result">
                         </article>
                     </div>
-
-                    <a
-                        class="download-button"
-                        href="{{ result.processed_download }}"
-                        download="{{ result.download_name }}"
-                    >
-                        Download Processed PNG
-                    </a>
                 {% else %}
                     <div class="empty-state">
-                        <p>No processed image yet.</p>
-                        <p>Submit the form to see image previews and download the result.</p>
+                        <div class="empty-icon"></div>
+                        <h3>No image processed yet</h3>
+                        <p>Choose a file, enter your key, and run the form to preview the result here.</p>
                     </div>
                 {% endif %}
             </section>

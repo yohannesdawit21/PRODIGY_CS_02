@@ -6,10 +6,10 @@ from pathlib import Path
 
 from django.shortcuts import render
 
-from decrypt import decrypt_image
-from encrypt import encrypt_image
-from utils import image_to_data_url, load_image_from_bytes
 from webapp.forms import ImageProcessForm
+from webapp.services.decrypt import decrypt_image
+from webapp.services.encrypt import encrypt_image
+from webapp.services.utils import image_to_data_url, load_image_from_bytes
 
 
 def index_view(request):
@@ -47,6 +47,8 @@ def index_view(request):
             "image_size": f"{original_image.width} x {original_image.height}",
             "method": method,
             "key": key,
+            "method_label": dict(form.fields["method"].choices)[method],
+            "action_value": action,
             "original_preview": image_to_data_url(original_image),
             "processed_preview": image_to_data_url(processed_image),
             "processed_download": image_to_data_url(processed_image),

@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 from django import forms
+from django.core.exceptions import ValidationError
 
-from utils import validate_numeric_key, validate_supported_extension
+from webapp.services.utils import validate_numeric_key, validate_supported_extension
 
 
 METHOD_CHOICES = [
@@ -24,29 +25,48 @@ class ImageProcessForm(forms.Form):
     image = forms.ImageField(
         label="Image file",
         help_text="Upload a JPG or PNG image.",
+        widget=forms.ClearableFileInput(
+            attrs={
+                "accept": ".jpg,.jpeg,.png,image/png,image/jpeg",
+            }
+        ),
     )
     key = forms.CharField(
         label="Numeric key",
         help_text="Use the same numeric key to reverse the operation later.",
         max_length=30,
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Enter a numeric key",
+                "inputmode": "numeric",
+            }
+        ),
     )
     method = forms.ChoiceField(
         label="Method",
         choices=METHOD_CHOICES,
         initial="swap",
+        widget=forms.Select(),
     )
     action = forms.ChoiceField(
         label="Action",
         choices=ACTION_CHOICES,
         initial="encrypt",
+        widget=forms.Select(),
     )
 
     def clean_key(self) -> int:
         """Convert the submitted key into an integer."""
-        return validate_numeric_key(self.cleaned_data["key"])
+        try:
+            return validate_numeric_key(self.cleaned_data["key"])
+        except ValueError as error:
+            raise ValidationError(str(error)) from error
 
     def clean_image(self):
         """Reject unsupported file extensions before processing."""
         uploaded_image = self.cleaned_data["image"]
-        validate_supported_extension(uploaded_image.name)
+        try:
+            validate_supported_extension(uploaded_image.name)
+        except ValueError as error:
+            raise ValidationError(str(error)) from error
         return uploaded_image

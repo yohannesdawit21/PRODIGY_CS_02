@@ -1,4 +1,4 @@
-"""Utility helpers for the Pixel Manipulation Image Encryption Tool."""
+"""Utility helpers for the image encryption web app."""
 
 from __future__ import annotations
 
@@ -15,10 +15,7 @@ SUPPORTED_EXTENSIONS = {".jpg", ".jpeg", ".png"}
 
 
 def validate_numeric_key(key_text: str) -> int:
-    """Convert the user input into an integer key.
-
-    The same numeric key must be used for encryption and decryption.
-    """
+    """Convert the user input into an integer key."""
     cleaned_key = key_text.strip()
     if not cleaned_key:
         raise ValueError("Please enter a numeric key.")
@@ -80,8 +77,6 @@ def save_image(image: Image.Image, file_path: str | Path) -> None:
         raise FileNotFoundError("The destination folder does not exist.")
 
     output_image = image
-
-    # JPEG does not support transparency, so convert RGBA images before saving.
     if path.suffix.lower() in {".jpg", ".jpeg"} and image.mode == "RGBA":
         output_image = image.convert("RGB")
 
@@ -108,11 +103,7 @@ def image_to_data_url(image: Image.Image, image_format: str = "PNG") -> str:
 
 
 def build_permutation(pixel_count: int, seed_key: int) -> list[int]:
-    """Build a deterministic shuffled list of pixel positions.
-
-    Using the same seed key always produces the same order, which makes
-    decryption possible later.
-    """
+    """Build a deterministic shuffled list of pixel positions."""
     indices = list(range(pixel_count))
     random.Random(seed_key).shuffle(indices)
     return indices
@@ -146,3 +137,4 @@ def build_image_from_pixels(
     output_image = Image.new(mode, size)
     output_image.putdata(list(pixels))
     return output_image
+

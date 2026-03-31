@@ -1,4 +1,4 @@
-"""Encryption logic for the Pixel Manipulation Image Encryption Tool."""
+"""Encryption logic for the image encryption web app."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from collections.abc import Callable
 
 from PIL import Image
 
-from utils import add_value_to_pixel, build_image_from_pixels, build_permutation
+from .utils import add_value_to_pixel, build_image_from_pixels, build_permutation
 
 
 ProgressCallback = Callable[[int, str], None]
@@ -113,3 +113,4 @@ def maybe_report_loop_progress(
     completion = (index + 1) / total
     scaled_percent = start_percent + int((end_percent - start_percent) * completion)
     progress_callback(min(end_percent, scaled_percent), message)
+
