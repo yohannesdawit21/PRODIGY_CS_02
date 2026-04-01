@@ -32,7 +32,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-3. Install the dependencies:
+1. Install the dependencies:
 
 ```bash
 pip install -r requirements.txt
@@ -59,11 +59,11 @@ http://127.0.0.1:8000/
 1. Upload a JPG or PNG image.
 2. Enter a numeric key such as `42`.
 3. Choose the method:
-   - `swap` for seeded pixel shuffling
-   - `math` for modular pixel changes
+  - `swap` for seeded pixel shuffling
+  - `math` for modular pixel changes
 4. Choose the action:
-   - `encrypt` to scramble the image
-   - `decrypt` to reverse an earlier encrypted image
+  - `encrypt` to scramble the image
+  - `decrypt` to reverse an earlier encrypted image
 5. Click `Run Processing`.
 6. Review the original and processed previews.
 7. Download the processed PNG file.
