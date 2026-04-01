@@ -47,15 +47,45 @@ img {
 .page-shell {
     max-width: 1240px;
     margin: 0 auto;
-    padding: 40px 20px 48px;
+    padding: 24px 20px 40px;
 }
 
 .hero {
-    max-width: 760px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
     margin-bottom: 28px;
 }
 
-.eyebrow,
+.hero-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.hero-logo {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: rgba(7, 13, 20, 0.78);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.hero-logo svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.hero-brand-copy {
+    display: grid;
+    gap: 2px;
+}
+
+.hero-title,
+.hero-subtitle,
 .section-label,
 .preview-label,
 .meta-label {
@@ -64,6 +94,17 @@ img {
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--accent);
+}
+
+.hero-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+}
+
+.hero-subtitle {
+    color: var(--muted);
+    letter-spacing: 0.08em;
 }
 
 .hero h1,
@@ -384,5 +425,9 @@ input[type="file"]::file-selector-button {
 
     .hero h1 {
         font-size: clamp(2rem, 11vw, 3rem);
+    }
+
+    .hero-brand {
+        align-items: flex-start;
     }
 }
