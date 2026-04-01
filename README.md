@@ -11,22 +11,28 @@ A beginner-friendly Django project that encrypts and decrypts images using two r
   - `math`: apply modular arithmetic to pixel values
 - Preview the original and processed images side by side
 - Download the processed result as a PNG
-- Keep the image-processing logic modular in separate Python files
+- Use a simple dark Django UI with a single upload-to-result workflow
 
 ## Project Structure
 
 - `manage.py` - Django command entry point
 - `config/` - Django project settings and URLs
 - `webapp/` - forms, views, template, and styling for the browser UI
-- `encrypt.py` - encryption logic
-- `decrypt.py` - decryption logic
-- `utils.py` - shared helper functions
+- `webapp/services/` - encryption, decryption, and shared image helpers
 - `requirements.txt` - project dependencies
+- `.venv/` - local virtual environment for project packages
 
 ## Installation
 
 1. Make sure Python 3 is installed.
-2. Install the dependencies:
+2. Create and activate a virtual environment:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+3. Install the dependencies:
 
 ```bash
 pip install -r requirements.txt
@@ -39,6 +45,8 @@ Start the Django development server:
 ```bash
 python manage.py runserver
 ```
+
+If you forget to activate `.venv`, `manage.py` will try to use the local project virtualenv automatically.
 
 Then open your browser at:
 
